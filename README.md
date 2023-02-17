@@ -1,16 +1,13 @@
-# personal_expenses
+# Personal Expenses Mobile App
 
-A new Flutter project.
+Projek ini belum menggunakan database, fitur-fitur yang dapat dilakukan oleh aplikasi ini: <br>
+- Menambah transaksi
+- Menghapus transaksi
+- Datepicker
+- Menampilkan grafik pengeluaran dalam bentuk chart
 
-## Getting Started
+Demo Aplikasi
+-
 
-This project is a starting point for a Flutter application.
+https://user-images.githubusercontent.com/92832439/219652716-f1a7bf21-32f1-405c-bc82-0024ab5899a4.mp4
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
