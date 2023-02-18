@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/chart.dart';
 import '../widgets/transaction_list.dart';
 import '../models/transaction.dart';
 import '../widgets/new_transaction.dart';
 
 void main() {
+  //untuk membuat orientasi aplikasi terpaku pada portrait orientation
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //   [
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ],
+  // );
   runApp(const MyApp());
 }
 
@@ -52,24 +61,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'Makan Siang',
-    //   amount: 12.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Minum',
-    //   amount: 6.00,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't3',
-    //   title: 'Rokok',
-    //   amount: 13.00,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'Makan Siang',
+      amount: 12.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Minum',
+      amount: 6.00,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Rokok',
+      amount: 13.00,
+      date: DateTime.now(),
+    ),
   ];
 
   void _addNewTx(String txTitle, double txAmount, DateTime chosenDate) {
@@ -87,6 +96,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _showAddTxModal(BuildContext ctx) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: ctx,
       builder: (_) {
         return GestureDetector(
@@ -120,43 +130,72 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  bool _showChart = false;
+
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Personal Expenses'),
+      actions: [
+        IconButton(
+          onPressed: () => _showAddTxModal(context),
+          icon: Icon(Icons.add),
+        )
+      ],
+    );
+
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final txListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child:
+          TransactionList(transaction: _userTransactions, deleteTx: _deleteTx),
+    );
+
+    final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        actions: [
-          IconButton(
-            onPressed: () => _showAddTxModal(context),
-            icon: Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              child: Chart(recentTransactions: _recentTransactions),
-              width: double.infinity,
-            ),
-            _userTransactions.isEmpty
-                ? Column(
-                    children: [
-                      Container(
-                        height: 200,
-                        child: Image.asset('assets/images/waiting.png'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'No transaction added yet!',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ],
-                  )
-                : TransactionList(
-                    transaction: _userTransactions, deleteTx: _deleteTx),
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show chart:'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showChart = value;
+                        });
+                      }),
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (mediaQuery.size.height -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top) *
+                    0.3,
+                child: Chart(recentTransactions: _recentTransactions),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (mediaQuery.size.height -
+                              appBar.preferredSize.height -
+                              mediaQuery.padding.top) *
+                          0.7,
+                      child: Chart(recentTransactions: _recentTransactions),
+                    )
+                  : txListWidget
           ],
         ),
       ),
