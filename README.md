@@ -5,6 +5,7 @@ Projek ini belum menggunakan database, fitur-fitur yang dapat dilakukan oleh apl
 - Menghapus transaksi
 - Datepicker
 - Menampilkan grafik pengeluaran dalam bentuk chart
+- Adaptive app untuk portrait dan landscape mode
 
 Demo Aplikasi
 -
